@@ -10,6 +10,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${FSS_BUILD_ROOT}/bin)
 add_subdirectory(src)
 
 add_executable(FileSystemSimulator main.cpp)
-target_link_libraries(FileSystemSimulator fss)
+target_link_libraries(FileSystemSimulator fs)
 
 add_subdirectory(test)

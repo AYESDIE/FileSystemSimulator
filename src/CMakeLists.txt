@@ -1,10 +1,7 @@
-add_library(fss SHARED
-        fss.hpp
-        fss/fs.cpp)
+add_library(fs SHARED
+            fs.cpp)
 
-target_include_directories(fss PUBLIC
+target_include_directories(fs PUBLIC
         ${PROJECT_SOURCE_DIR}/src)
 
-target_include_directories(fss PUBLIC ${REM_BUILD_ROOT}/include)
-
-add_subdirectory(fss)
+target_include_directories(fs PUBLIC ${REM_BUILD_ROOT}/include)

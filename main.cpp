@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include <fss.hpp>
+#include <fs.hpp>
 
 #define ARGLEN  50500   // token length
 #define MAXARGS 3       // cmdline args
