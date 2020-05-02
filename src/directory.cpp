@@ -10,7 +10,7 @@ directory::directory(int number, std::string name) : block(number, true, name) {
 }
 
 directory::~directory() {
-  std::cout << "directory " << this->getName() << " is deleted." << std::endl;
+  log(std::cout, "directory ", this->getName(), " is deleted.\n");
 }
 
 directory *directory::getDirEntry(std::string name) {
@@ -87,31 +87,28 @@ void directory::setFree(int index) {
 
 void directory::display(std::string indent) {
   // display name, type, block number, and size
-  std::cout << indent << this->getName() << "\tD\t";
-  std::cout << "#: " << this->getNumber() << "\tSIZE: " << this->getSize()
-            << std::endl;
+  log(std::cout, indent, this->getName(), "\tD\t");
+  log(std::cout, "#: ", this->getNumber(), "\tSIZE: ", this->getSize(), "\n");
 
   // display back pointer block #
   if (this->getBack() == nullptr) {
-    std::cout << indent << "-BACK: nullptr" << std::endl;
+    log(std::cout, indent, "-BACK: nullptr\n");
   } else {
-    std::cout << indent << "-BACK: " << this->getBack()->getNumber()
-              << std::endl;
+    log(std::cout, indent, "-BACK: ", this->getBack()->getNumber(), "\n");
   }
 
   // display forward pointer block #
   if (this->getFrwd() == nullptr) {
-    std::cout << indent << "-FRWD: nullptr" << std::endl;
+    log(std::cout, indent, "-FRWD: nullptr\n");
   } else {
-    std::cout << indent << "-FRWD: " << this->getFrwd()->getNumber()
-              << std::endl;
+    log(std::cout, indent, "-FRWD: ", this->getFrwd()->getNumber(), "\n");
   }
 
   if (this->getNumber() == 0) {
-    std::cout << indent << "-FREE: " << free << std::endl;
+    log(std::cout, indent, "-FREE: ", free, "\n");
   }
 
-  std::cout << indent << "-FILLER: UNUSED" << std::endl;
+  log(std::cout, indent, "-FILLER: UNUSED\n");
 
   if (isEmpty() == false) {
     indent += "\t";

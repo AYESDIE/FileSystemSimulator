@@ -24,7 +24,7 @@ block::block(int number, bool isDir, std::string name) {
 }
 
 block::~block() {
-  std::cout << "block " << this->getNumber() << " is now empty." << std::endl;
+  log(std::cout, "block ", this->getNumber(), " is now empty.\n");
   reset();
 }
 

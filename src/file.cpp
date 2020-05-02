@@ -8,7 +8,7 @@ file::file(int number, std::string name) : block(number, false, name) {
 }
 
 file::~file() {
-  std::cout << "data file " << this->getName() << " is deleted." << std::endl;
+  log(std::cout, "data file ", this->getName(), " is deleted.\n");
 }
 
 void file::writeFile(int &count, std::string &input, int &current) {
@@ -29,7 +29,7 @@ void file::writeFile(int &count, std::string &input, int &current) {
 void file::readFile(int &count, int &current) {
   for (; current < FILE_SIZE && 0 < count; count--) {
     if (data[current] != '\0') {
-      std::cout << data[current];
+      log(std::cout, data[current]);
       cursor++;
       current++;
     } else {
@@ -39,8 +39,8 @@ void file::readFile(int &count, int &current) {
 }
 
 void file::display(std::string indent) {
-  std::cout << indent << this->getName() << "\tU\t";
-  std::cout << "#: " << this->getNumber();
+  log(std::cout, indent, this->getName(), "\tU\t");
+  log(std::cout, "#: ", this->getNumber());
 
   block *temp;
   block *size;
@@ -48,12 +48,12 @@ void file::display(std::string indent) {
   size = this;
 
   while (temp != nullptr) {
-    std::cout << "<=>" << temp->getNumber();
+    log(std::cout, "<=>", temp->getNumber());
     size = temp;
     temp = temp->getFrwd();
   }
 
-  std::cout << "\tSIZE: " << ((file *)size)->getSize() << std::endl;
+  log(std::cout, "\tSIZE: ", ((file *)size)->getSize(), "\n");
 }
 
 int file::getEnd() {
