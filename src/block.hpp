@@ -1,9 +1,9 @@
-#ifndef FILESYSTEMSIMULATOR_BLOCK_HPP
-#define FILESYSTEMSIMULATOR_BLOCK_HPP
+#ifndef FSX_BLOCK_HPP
+#define FSX_BLOCK_HPP
 
 #include "core.hpp"
 
-namespace fs
+namespace fsx
 {
 /**
  * A class representation of a block.
@@ -88,6 +88,6 @@ class block
     // Block Type
     bool dir;
 };
-} // namespace fs
+} // namespace fsx
 
-#endif // FILESYSTEMSIMULATOR_BLOCK_HPP
+#endif // FSX_BLOCK_HPP

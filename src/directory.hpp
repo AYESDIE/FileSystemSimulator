@@ -1,11 +1,11 @@
-#ifndef FILESYSTEMSIMULATOR_DIRECTORY_HPP
-#define FILESYSTEMSIMULATOR_DIRECTORY_HPP
+#ifndef FSX_DIRECTORY_HPP
+#define FSX_DIRECTORY_HPP
 
 #include "block.hpp"
 #include "core.hpp"
 #include "file.hpp"
 
-namespace fs
+namespace fsx
 {
 /**
  * Class representation for a directory.
@@ -85,6 +85,6 @@ class directory : public block
 
     int free;
 };
-} // namespace fs
+} // namespace fsx
 
-#endif // FILESYSTEMSIMULATOR_DIRECTORY_HPP
+#endif // FSX_DIRECTORY_HPP

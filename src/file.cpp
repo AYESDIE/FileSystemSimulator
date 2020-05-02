@@ -1,12 +1,12 @@
 #include "file.hpp"
 
-namespace fs
+namespace fsx
 {
 file::file(int number, std::string name) : block(number, false, name)
 {
     for (int i = 0; i < FILE_SIZE; i++)
     {
-        data[i] = '\0';
+        this->data[i] = '\0';
     }
 }
 
@@ -21,14 +21,14 @@ void file::writeFile(int &count, std::string &input, int &current)
     {
         if (input != "")
         {
-            data[current] = input[0];
+            this->data[current] = input[0];
             input = input.substr(input.find(input[0]) + 1);
             current++;
             cursor++;
         }
         else
         {
-            data[current] = ' ';
+            this->data[current] = ' ';
             cursor++;
             current++;
         }
@@ -39,9 +39,9 @@ void file::readFile(int &count, int &current)
 {
     for (; current < FILE_SIZE && 0 < count; count--)
     {
-        if (data[current] != '\0')
+        if (this->data[current] != '\0')
         {
-            log(std::cout, data[current]);
+            log(std::cout, this->data[current]);
             cursor++;
             current++;
         }
@@ -81,7 +81,7 @@ int file::getEnd()
 
     for (int i = 0; i < FILE_SIZE; i++)
     {
-        if (data[i] == '\0')
+        if (this->data[i] == '\0')
         {
             current = i;
             flag = true;
@@ -109,11 +109,11 @@ int file::getSize()
 
     for (int i = 0; i < FILE_SIZE; i++)
     {
-        if (data[i] != '\0')
+        if (this->data[i] != '\0')
         {
             size++;
         }
     }
     return size;
 }
-} // namespace fs
+} // namespace fsx

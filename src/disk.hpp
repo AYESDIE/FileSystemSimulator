@@ -1,11 +1,10 @@
-#ifndef FILESYSTEMSIMULATOR_DISK_HPP
-#define FILESYSTEMSIMULATOR_DISK_HPP
+#ifndef FSX_DISK_HPP
+#define FSX_DISK_HPP
 
 #include "block.hpp"
 #include "directory.hpp"
-#include "fss.hpp"
 
-namespace fs
+namespace fsx
 {
 /**
  * Class representation for a disk block.
@@ -143,6 +142,6 @@ class disk : public block
     block *sector[DISK_SIZE];
     bool freeSpaceList[DISK_SIZE];
 };
-} // namespace fs
+} // namespace fsx
 
-#endif // FILESYSTEMSIMULATOR_DISK_HPP
+#endif // FSX_DISK_HPP

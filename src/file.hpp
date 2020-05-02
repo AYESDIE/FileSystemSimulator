@@ -1,10 +1,10 @@
-#ifndef FILESYSTEMSIMULATOR_FILE_HPP
-#define FILESYSTEMSIMULATOR_FILE_HPP
+#ifndef FSX_FILE_HPP
+#define FSX_FILE_HPP
 
 #include "block.hpp"
 #include "core.hpp"
 
-namespace fs
+namespace fsx
 {
 /**
  * A class representation for a file block.
@@ -58,6 +58,6 @@ class file : public block
     // Data in the file.
     char data[FILE_SIZE];
 };
-} // namespace fs
+} // namespace fsx
 
-#endif // FILESYSTEMSIMULATOR_FILE_HPP
+#endif // FSX_FILE_HPP

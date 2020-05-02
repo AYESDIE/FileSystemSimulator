@@ -1,13 +1,13 @@
 #include "directory.hpp"
 
-namespace fs
+namespace fsx
 {
 directory::directory(int number, std::string name) : block(number, true, name)
 {
-    free = -1;
+    this->free = -1;
     for (int i = 0; i < DIR_SIZE; i++)
     {
-        entry[i] = nullptr;
+        this->entry[i] = nullptr;
     }
 }
 
@@ -23,9 +23,9 @@ directory *directory::getDirEntry(std::string name)
 
     for (int i = 0; i < DIR_SIZE; i++)
     {
-        if (entry[i] != nullptr && entry[i]->getName() == name && entry[i]->isDir() == true)
+        if (this->entry[i] != nullptr && this->entry[i]->getName() == name && this->entry[i]->isDir() == true)
         {
-            temp = (directory *)entry[i];
+            temp = (directory *)this->entry[i];
             break;
         }
     }
@@ -39,9 +39,9 @@ block *directory::getFileEntry(std::string name)
 
     for (int i = 0; i < DIR_SIZE; i++)
     {
-        if (entry[i] != nullptr && entry[i]->getName() == name && entry[i]->isDir() == false)
+        if (this->entry[i] != nullptr && this->entry[i]->getName() == name && this->entry[i]->isDir() == false)
         {
-            temp = entry[i];
+            temp = this->entry[i];
             break;
         }
     }
@@ -50,7 +50,7 @@ block *directory::getFileEntry(std::string name)
 
 block **directory::getEntryHead()
 {
-    return entry;
+    return this->entry;
 }
 
 int directory::deleteNumber(block *toDelete)
@@ -60,10 +60,10 @@ int directory::deleteNumber(block *toDelete)
 
     for (int i = 0; i < DIR_SIZE; i++)
     {
-        if (entry[i]->getBlockNumber() == toDelete->getBlockNumber())
+        if (this->entry[i]->getBlockNumber() == toDelete->getBlockNumber())
         {
-            temp = entry[i]->getBlockNumber();
-            entry[i] = nullptr;
+            temp = this->entry[i]->getBlockNumber();
+            this->entry[i] = nullptr;
             break;
         }
     }
@@ -77,7 +77,7 @@ int directory::getSize()
 
     for (int i = 0; i < DIR_SIZE; i++)
     {
-        if (entry[i] != nullptr)
+        if (this->entry[i] != nullptr)
         {
             size++;
         }
@@ -89,9 +89,9 @@ void directory::addEntry(block *newEntry)
 {
     for (int i = 0; i < DIR_SIZE; i++)
     {
-        if (entry[i] == nullptr)
+        if (this->entry[i] == nullptr)
         {
-            entry[i] = newEntry;
+            this->entry[i] = newEntry;
             break;
         }
     }
@@ -101,10 +101,10 @@ void directory::setFree(int index)
 {
     if (this->getBlockNumber() == 0)
     {
-        free = index;
+        this->free = index;
     }
     else
-        free = -1;
+        this->free = -1;
 }
 
 void directory::display(std::string indent)
@@ -142,15 +142,15 @@ void directory::display(std::string indent)
         indent += "\t";
         for (int i = 0; i < DIR_SIZE; i++)
         {
-            if (entry[i] != nullptr)
+            if (this->entry[i] != nullptr)
             {
-                if (entry[i]->isDir() == true)
+                if (this->entry[i]->isDir() == true)
                 {
-                    ((directory *)entry[i])->display(indent);
+                    ((directory *)this->entry[i])->display(indent);
                 }
                 else
                 {
-                    ((file *)entry[i])->display(indent);
+                    ((file *)this->entry[i])->display(indent);
                 }
             }
         }
@@ -164,7 +164,7 @@ bool directory::isEmpty()
 
     for (int i = 0; i < DIR_SIZE; i++)
     {
-        if (entry[i] != nullptr)
+        if (this->entry[i] != nullptr)
         {
             flag = false;
             break;
@@ -172,4 +172,4 @@ bool directory::isEmpty()
     }
     return flag;
 }
-} // namespace fs
+} // namespace fsx

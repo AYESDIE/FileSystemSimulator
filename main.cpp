@@ -1,5 +1,5 @@
 #include <cstring>
-#include <fss.hpp>
+#include <fsx.hpp>
 #include <iostream>
 
 #define ARGLEN 50500
@@ -18,9 +18,9 @@ int main()
 {
     char arg[ARGLEN];
     char *arglist[MAXARGS];
-    fs::disk *Disk1;
+    fsx::disk *Disk1;
 
-    Disk1 = new fs::disk();
+    Disk1 = new fsx::disk();
 
     while (strcmp(arg, "exit\n") != 0)
     {

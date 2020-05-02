@@ -1,15 +1,14 @@
 #include "block.hpp"
 
-namespace fs
+namespace fsx
 {
 block::block()
 {
-    dir = false;
-
-    name = "";
-    number = -1;
-    frwd = nullptr;
-    back = nullptr;
+    this->dir = false;
+    this->name = "";
+    this->number = -1;
+    this->frwd = nullptr;
+    this->back = nullptr;
 }
 
 block::block(int blockNumber, bool isDir, const std::string &blockName)
@@ -17,13 +16,13 @@ block::block(int blockNumber, bool isDir, const std::string &blockName)
 {
     if (number != 0)
     {
-        frwd = nullptr;
-        back = nullptr;
+        this->frwd = nullptr;
+        this->back = nullptr;
     }
     else
     {
-        frwd = this;
-        back = this;
+        this->frwd = this;
+        this->back = this;
     }
 }
 
@@ -35,12 +34,12 @@ block::~block()
 
 int block::getBlockNumber()
 {
-    return number;
+    return this->number;
 }
 
 bool block::isDir()
 {
-    return dir;
+    return this->dir;
 }
 
 void block::setFrwd(block *frwd)
@@ -55,25 +54,25 @@ void block::setBack(block *back)
 
 void block::reset()
 {
-    number = -1;
-    dir = false;
-    frwd = nullptr;
-    back = nullptr;
-    name = "";
+    this->number = -1;
+    this->dir = false;
+    this->frwd = nullptr;
+    this->back = nullptr;
+    this->name = "";
 }
 
 block *block::getFrwd()
 {
-    return frwd;
+    return this->frwd;
 }
 
 block *block::getBack()
 {
-    return back;
+    return this->back;
 }
 
 std::string block::getName()
 {
-    return name;
+    return this->name;
 }
-} // namespace fs
+} // namespace fsx

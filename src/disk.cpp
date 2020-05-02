@@ -1,16 +1,16 @@
 #include "disk.hpp"
 
-namespace fs
+namespace fsx
 {
 
 disk::disk()
 {
-    freeSpaceList[0] = false;
-    sector[0] = new directory(0, "root");
+    this->freeSpaceList[0] = false;
+    this->sector[0] = new directory(0, "root");
     for (int i = 1; i < DISK_SIZE; i++)
     {
-        freeSpaceList[i] = true;
-        sector[i] = nullptr;
+        this->freeSpaceList[i] = true;
+        this->sector[i] = nullptr;
     }
     close();
 }
@@ -27,7 +27,7 @@ int disk::index()
 
     for (int i = 0; i < DISK_SIZE; i++)
     {
-        if (freeSpaceList[i] == true)
+        if (this->freeSpaceList[i] == true)
         {
             index = i;
             break;
@@ -50,8 +50,8 @@ bool disk::isOpen()
 void disk::display()
 {
     log(std::cout, "----------- File System Display ------------\n");
-    ((directory *)sector[0])->setFree(index());
-    ((directory *)sector[0])->display("");
+    ((directory *)this->sector[0])->setFree(index());
+    ((directory *)this->sector[0])->display("");
     count();
 
     log(std::cout, "Mode: ");
@@ -79,7 +79,7 @@ void disk::display()
     }
     else
     {
-        log(std::cout, sector[openBlock]->getName(), "\t");
+        log(std::cout, this->sector[openBlock]->getName(), "\t");
     }
 
     log(std::cout, "Cursor: ");
@@ -103,13 +103,13 @@ void disk::count()
     file = 0;
     for (int i = 0; i < DISK_SIZE; i++)
     {
-        if (freeSpaceList[i] == 1)
+        if (this->freeSpaceList[i] == 1)
         {
             free++;
         }
         else
         {
-            if (sector[i]->isDir() == true)
+            if (this->sector[i]->isDir() == true)
                 dir++;
             else
                 file++;
@@ -131,13 +131,13 @@ void disk::create(char type, std::string name)
     }
     else if (isOpen() == true && type == 'U')
     {
-        log(std::cout, "Error: Create ", name, " failed because ", sector[openBlock]->getName(),
+        log(std::cout, "Error: Create ", name, " failed because ", this->sector[openBlock]->getName(),
             " is opened. Please close it first before creating another file", "\n");
     }
     else
     {
         directory *parent;
-        parent = helpFind((directory *)sector[0], name);
+        parent = helpFind((directory *)this->sector[0], name);
 
         if (parent == nullptr && index() != -1)
         {
@@ -178,12 +178,12 @@ void disk::open(char mode, std::string name)
 {
     if (isOpen() == true)
     {
-        log(std::cout, "Error: Open ", name, " failed because ", sector[openBlock]->getName(),
-            " is opened. Please close it first before opening another file", "\n");
+        log(std::cout, "Error: Open ", name, " failed because ", this->sector[openBlock]->getName(),
+            " is opened. Please close it first before opening another file\n");
     }
     else if (mode != 'I' && mode != 'U' && mode != 'O')
     {
-        log(std::cout, "Error: Open ", name, " failed. Please enter the correct open mode. (eg: I or U or O).", "\n");
+        log(std::cout, "Error: Open ", name, " failed. Please enter the correct open mode. (eg: I or U or O).\n");
     }
     else
     {
@@ -192,7 +192,7 @@ void disk::open(char mode, std::string name)
 
         if (b1 == nullptr)
         {
-            log(std::cout, "Error: Open ", name, " failed because file name is not valid. Please try again.", "\n");
+            log(std::cout, "Error: Open ", name, " failed because file name is not valid. Please try again.\n");
         }
         else
         {
@@ -206,7 +206,7 @@ void disk::open(char mode, std::string name)
             else if (mode == 'O')
             {
                 openMode = 1;
-                cursor = ((file *)sector[openBlock])->getEnd();
+                cursor = ((file *)this->sector[openBlock])->getEnd();
             }
             else
             {
@@ -232,7 +232,7 @@ void disk::deleteNew(std::string name)
 
     blockNum = -1;
     toBeDelete = findBlock(name);
-    parent = findParent((directory *)sector[0], name);
+    parent = findParent((directory *)this->sector[0], name);
 
     if (toBeDelete != nullptr && parent != nullptr && toBeDelete->isDir() == false)
     {
@@ -259,7 +259,7 @@ void disk::write(int count, std::string input)
 {
     if (isOpen() == true && openMode == 0)
     {
-        log(std::cout, "Error: Write failed because ", sector[openBlock]->getName(), " is in Input mode.\n");
+        log(std::cout, "Error: Write failed because ", this->sector[openBlock]->getName(), " is in Input mode.\n");
     }
     else if (isOpen() == false)
     {
@@ -272,21 +272,19 @@ void disk::write(int count, std::string input)
 
         current = cursor;
         blockNum = openBlock;
-        next = (file *)(sector[openBlock]->getFrwd());
+        next = (file *)(this->sector[openBlock]->getFrwd());
 
         while (current >= FILE_SIZE && next != nullptr)
         {
             openBlock = next->getBlockNumber();
             current -= FILE_SIZE;
-            next = (file *)(sector[openBlock]->getFrwd());
+            next = (file *)(this->sector[openBlock]->getFrwd());
         }
 
         if (current >= FILE_SIZE)
         {
-            log(std::cout,
-                "Error: Write failed because the cursor is getting beyond "
-                "the size of ",
-                sector[openBlock]->getName(), "\n");
+            log(std::cout, "Error: Write failed because the cursor is getting beyond the size of ",
+                this->sector[openBlock]->getName(), "\n");
         }
         else
         {
@@ -301,7 +299,7 @@ void disk::helpWrite(int &count, std::string &input, int &current)
     block *newFile;
     int totalToWrite, wrote;
 
-    newFile = sector[openBlock];
+    newFile = this->sector[openBlock];
     totalToWrite = current + count;
     wrote = 0;
 
@@ -317,15 +315,15 @@ void disk::helpWrite(int &count, std::string &input, int &current)
             wrote = FILE_SIZE - current;
         }
 
-        ((file *)sector[openBlock])->writeFile(count, input, current);
+        ((file *)this->sector[openBlock])->writeFile(count, input, current);
         totalToWrite -= wrote;
 
-        newFile = helpCreate('U', sector[openBlock]->getName());
+        newFile = helpCreate('U', this->sector[openBlock]->getName());
 
         if (newFile != nullptr)
         {
-            sector[openBlock]->setFrwd(newFile);
-            newFile->setBack(sector[openBlock]);
+            this->sector[openBlock]->setFrwd(newFile);
+            newFile->setBack(this->sector[openBlock]);
             openBlock = newFile->getBlockNumber();
         }
         else
@@ -337,21 +335,17 @@ void disk::helpWrite(int &count, std::string &input, int &current)
     if (totalToWrite < FILE_SIZE && newFile != nullptr)
     {
         current = current % FILE_SIZE;
-        ((file *)sector[openBlock])->writeFile(count, input, current);
+        ((file *)this->sector[openBlock])->writeFile(count, input, current);
         if (count > 0)
         {
             log(std::cout,
-                "Error: Write is unfinished because ALL the sectors are "
-                "used and the disk can't allocate more.",
-                "\n");
+                "Error: Write is unfinished because ALL the sectors are used and the disk can't allocate more.\n");
         }
     }
     else
     {
         log(std::cout,
-            "Error: Write is unfinished because ALL the sectors are used "
-            "and the disk can't allocate more.",
-            "\n");
+            "Error: Write is unfinished because ALL the sectors are used and the disk can't allocate more.\n");
     }
 }
 
@@ -359,7 +353,7 @@ void disk::read(int count)
 {
     if (isOpen() == true && openMode == 1)
     {
-        log(std::cout, "Error: Read failed because ", sector[openBlock]->getName(), " is in Output mode.\n");
+        log(std::cout, "Error: Read failed because ", this->sector[openBlock]->getName(), " is in Output mode.\n");
     }
     else if (isOpen() == false)
     {
@@ -372,7 +366,7 @@ void disk::read(int count)
 
         current = cursor;
         blockNum = openBlock;
-        next = sector[openBlock];
+        next = this->sector[openBlock];
 
         while (current >= FILE_SIZE && next->getFrwd() != nullptr)
         {
@@ -383,16 +377,14 @@ void disk::read(int count)
 
         if (current >= FILE_SIZE)
         {
-            log(std::cout,
-                "Error: Read failed because the cursor is getting beyond "
-                "the size of ",
-                sector[openBlock]->getName(), "\n");
+            log(std::cout, "Error: Read failed because the cursor is getting beyond the size of ",
+                this->sector[openBlock]->getName(), "\n");
         }
         else
         {
             int totalRead, readed;
             totalRead = current + count;
-            next = sector[openBlock];
+            next = this->sector[openBlock];
             readed = 0;
 
             while (totalRead >= FILE_SIZE)
@@ -407,10 +399,10 @@ void disk::read(int count)
                     readed = FILE_SIZE - current;
                 }
 
-                ((file *)sector[openBlock])->readFile(count, current);
+                ((file *)this->sector[openBlock])->readFile(count, current);
                 totalRead -= readed;
 
-                next = sector[openBlock]->getFrwd();
+                next = this->sector[openBlock]->getFrwd();
                 if (next != nullptr)
                 {
                     openBlock = next->getBlockNumber();
@@ -424,7 +416,7 @@ void disk::read(int count)
             if (totalRead < FILE_SIZE && next != nullptr)
             {
                 current = current % FILE_SIZE;
-                ((file *)sector[openBlock])->readFile(count, current);
+                ((file *)this->sector[openBlock])->readFile(count, current);
                 log(std::cout, "(EOF)\n");
                 if (count > 0)
                 {
@@ -445,7 +437,7 @@ void disk::seek(int base, int offset)
 {
     if (isOpen() == true && openMode == 1)
     {
-        log(std::cout, "Error: Seek failed because ", sector[openBlock]->getName(), " is in Output mode.\n");
+        log(std::cout, "Error: Seek failed because ", this->sector[openBlock]->getName(), " is in Output mode.\n");
     }
     else if (isOpen() == false)
     {
@@ -469,10 +461,7 @@ void disk::seek(int base, int offset)
         {
             if (cursor + offset < 0)
             {
-                log(std::cout,
-                    "Error: Seek failed. Can't go backward when reach the "
-                    "beginning of the file.",
-                    "\n");
+                log(std::cout, "Error: Seek failed. Can't go backward when reach the beginning of the file.\n");
             }
             else
             {
@@ -481,16 +470,13 @@ void disk::seek(int base, int offset)
         }
         else if (base == 1)
         {
-            if (((file *)sector[openBlock])->getEnd() + offset < 0)
+            if (((file *)this->sector[openBlock])->getEnd() + offset < 0)
             {
-                log(std::cout,
-                    "Error: Seek failed. Can't go backward when reach the "
-                    "beginning of the file.",
-                    "\n");
+                log(std::cout, "Error: Seek failed. Can't go backward when reach the beginning of the file.\n");
             }
             else
             {
-                cursor = ((file *)sector[openBlock])->getEnd() + offset;
+                cursor = ((file *)this->sector[openBlock])->getEnd() + offset;
             }
         }
     }
@@ -514,9 +500,9 @@ block *disk::findBlock(std::string name)
 
         for (int i = 0; i < DISK_SIZE; i++)
         {
-            if (sector[i] != nullptr && sector[i]->getName() == name1)
+            if (this->sector[i] != nullptr && this->sector[i]->getName() == name1)
             {
-                temp = sector[i];
+                temp = this->sector[i];
                 break;
             }
         }
@@ -586,14 +572,14 @@ block *disk::helpCreate(char type, std::string name)
     {
         if (type == 'U')
         {
-            sector[sectorNum] = new file(sectorNum, name);
+            this->sector[sectorNum] = new file(sectorNum, name);
         }
         else
         {
-            sector[sectorNum] = new directory(sectorNum, name);
+            this->sector[sectorNum] = new directory(sectorNum, name);
         }
-        freeSpaceList[sectorNum] = false;
-        newblock = sector[sectorNum];
+        this->freeSpaceList[sectorNum] = false;
+        newblock = this->sector[sectorNum];
         log(std::cout, "Allocate a new block ", sectorNum, "\n");
     }
 
@@ -671,9 +657,9 @@ void disk::deleteBlock(directory *super, directory *dir)
         }
         else
         {
-            delete sector[deleteNum];
-            sector[deleteNum] = nullptr;
-            freeSpaceList[deleteNum] = true;
+            delete this->sector[deleteNum];
+            this->sector[deleteNum] = nullptr;
+            this->freeSpaceList[deleteNum] = true;
         }
     }
     else
@@ -705,9 +691,9 @@ void disk::deleteBlock(directory *super, directory *dir)
         }
         else
         {
-            delete sector[deleteNum];
-            sector[deleteNum] = nullptr;
-            freeSpaceList[deleteNum] = true;
+            delete this->sector[deleteNum];
+            this->sector[deleteNum] = nullptr;
+            this->freeSpaceList[deleteNum] = true;
         }
     }
 }
@@ -727,9 +713,9 @@ void disk::deleteBlock(directory *super, block *file)
         }
         else
         {
-            delete sector[deleteNum];
-            sector[deleteNum] = nullptr;
-            freeSpaceList[deleteNum] = true;
+            delete this->sector[deleteNum];
+            this->sector[deleteNum] = nullptr;
+            this->freeSpaceList[deleteNum] = true;
         }
     }
 
@@ -752,18 +738,18 @@ void disk::deleteBlock(directory *super, block *file)
             front->setBack((block *)nullptr);
             back->setFrwd((block *)nullptr);
 
-            delete sector[deleteNum];
-            sector[deleteNum] = nullptr;
-            freeSpaceList[deleteNum] = true;
+            delete this->sector[deleteNum];
+            this->sector[deleteNum] = nullptr;
+            this->freeSpaceList[deleteNum] = true;
 
             front = back;
             back = front->getBack();
         }
 
         deleteNum = super->deleteNumber(file);
-        delete sector[deleteNum];
-        sector[deleteNum] = nullptr;
-        freeSpaceList[deleteNum] = true;
+        delete this->sector[deleteNum];
+        this->sector[deleteNum] = nullptr;
+        this->freeSpaceList[deleteNum] = true;
     }
 }
-} // namespace fs
+} // namespace fsx

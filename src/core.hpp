@@ -1,6 +1,6 @@
 
-#ifndef FILESYSTEMSIMULATOR_CORE_HPP
-#define FILESYSTEMSIMULATOR_CORE_HPP
+#ifndef FSX_CORE_HPP
+#define FSX_CORE_HPP
 
 #include <iostream>
 #include <string>
@@ -12,7 +12,7 @@ static int openBlock = -1;
 static int openMode = -1; // 0 = input, 1 = output, 2 = update
 static int cursor = -1;
 
-namespace fs
+namespace fsx
 {
 /**
  * Last call for variadic fml::log.
@@ -42,6 +42,6 @@ void log(outStream &os, const outType &output, const Ts... args)
     log(os, args...);
 }
 
-} // namespace fs
+} // namespace fsx
 
-#endif // FILESYSTEMSIMULATOR_CORE_HPP
+#endif // FSX_CORE_HPP
