@@ -18,11 +18,9 @@ namespace fs
         close();
     }
 
-// destructor of disk
     disk::~disk()
     {std::cout << "disk is now deleted." << std::endl; }
 
-// return the index of first available sector in the disk
     int disk::index()
     {
         int index;
@@ -37,7 +35,6 @@ namespace fs
         return index;
     }
 
-// check the open status;
     bool disk::isOpen()
     {
         bool flag;
@@ -48,7 +45,6 @@ namespace fs
         return flag;
     }
 
-// display the hierarchy structure of the disk
     void disk::display()
     {
         std::cout << "*********** File System Display ************" << std::endl;
@@ -89,7 +85,6 @@ namespace fs
         std::cout << "\n********************************************\n" ;
     }
 
-// count the type of file in the disk
     void disk::count()
     {
         int free, dir, file;
@@ -112,7 +107,6 @@ namespace fs
         std::cout << "# of data file blocks: " << file << std::endl;
     }
 
-// create a new block
     void disk::create(char type, std::string name)
     {
         std::string original;
@@ -126,8 +120,7 @@ namespace fs
         }
         else {
             directory* parent;
-            // get the parent directory for the coming block
-            parent = helpFind((directory*)sector[0], name);
+                        parent = helpFind((directory*)sector[0], name);
 
             if (parent == nullptr && index() != -1) {
                 std::cout << "Error: Create " << name << " failed. File name " << name << " is not valid." << std::endl;
@@ -157,7 +150,6 @@ namespace fs
         }
     }
 
-// open a block
     void disk::open(char mode, std::string name)
     {
         if (isOpen() == true) {
@@ -202,7 +194,6 @@ namespace fs
         cursor = -1;
     }
 
-// delete the name block
     void disk::deleteNew(std::string name)
     {
         block* toBeDelete;
@@ -213,13 +204,11 @@ namespace fs
         toBeDelete = findBlock(name);
         parent = findParent((directory*)sector[0],name);
 
-        // delete a file block
-        if (toBeDelete != nullptr && parent != nullptr && toBeDelete->isDir() == false) {
+                if (toBeDelete != nullptr && parent != nullptr && toBeDelete->isDir() == false) {
             blockNum = toBeDelete->getNumber();
             deleteBlock(parent, toBeDelete);
         }
-            // delete a directory block
-        else if (toBeDelete!= nullptr && parent != nullptr && toBeDelete->isDir() == true) {
+                    else if (toBeDelete!= nullptr && parent != nullptr && toBeDelete->isDir() == true) {
             blockNum = toBeDelete->getNumber();
             deleteBlock(parent, (directory*)toBeDelete);
         }
@@ -232,7 +221,6 @@ namespace fs
         }
     }
 
-// write into a file    **********
     void disk::write(int count, std::string input)
     {
         if (isOpen() == true && openMode == 0) {
@@ -249,8 +237,7 @@ namespace fs
             blockNum = openBlock;
             next = (file*)(sector[openBlock]->getFrwd());
 
-            // get to the end of the link list and reach the last file block
-            while (current >= FILE_SIZE && next != nullptr) {
+                        while (current >= FILE_SIZE && next != nullptr) {
                 openBlock = next->getNumber();
                 current -= FILE_SIZE;
                 next = (file*)(sector[openBlock]->getFrwd());
@@ -260,14 +247,11 @@ namespace fs
                 std::cout << "Error: Write failed because the cursor is getting beyond the size of " << sector[openBlock]->getName() << std::endl;
             }
             else {
-                // start writing in the last file
-                helpWrite(count, input, current);
+                                helpWrite(count, input, current);
             }
-            openBlock = blockNum;   // get back from the linked list
-        }
+            openBlock = blockNum;           }
     }
 
-// help write into file
     void disk::helpWrite(int& count, std::string& input, int& current)
     {
         block* newFile;
@@ -290,8 +274,7 @@ namespace fs
             ((file*)sector[openBlock])->writeFile(count, input, current);
             totalToWrite -= wrote;
 
-            // allocate new block
-            newFile = helpCreate('U', sector[openBlock]->getName());
+                        newFile = helpCreate('U', sector[openBlock]->getName());
 
             if (newFile != nullptr) {
                 sector[openBlock]->setFrwd(newFile);
@@ -317,7 +300,6 @@ namespace fs
     }
 
 
-// read out the file
     void disk::read(int count)
     {
         if (isOpen() == true && openMode == 1) {
@@ -334,8 +316,7 @@ namespace fs
             blockNum = openBlock;
             next = sector[openBlock];
 
-            // get to the desire block
-            while (current >= FILE_SIZE && next->getFrwd() != nullptr) {
+                        while (current >= FILE_SIZE && next->getFrwd() != nullptr) {
                 next = next->getFrwd();
                 openBlock = next->getNumber();
                 current -= FILE_SIZE;
@@ -388,7 +369,6 @@ namespace fs
         }
     }
 
-// seek for cursor
     void disk::seek(int base, int offset)
     {
         if (isOpen() == true && openMode == 1) {
@@ -398,16 +378,14 @@ namespace fs
             std::cout << "Error: Seek failed because no file is opened." << std::endl;
         }
         else {
-            // the begining of file
-            if (base == -1 && offset >= 0) {
+                        if (base == -1 && offset >= 0) {
                 cursor = 0;
                 cursor += offset;
             }
             else if (base == -1 && offset < 0) {
                 std::cout << "Error: Seek failed. Can't go backward when reach the beginning of the file." << std::endl;
             }
-                // the current position in the file
-            else if (base == 0) {
+                            else if (base == 0) {
                 if (cursor + offset < 0) {
                     std::cout << "Error: Seek failed. Can't go backward when reach the beginning of the file." << std::endl;
                 }
@@ -415,8 +393,7 @@ namespace fs
                     cursor += offset;
                 }
             }
-                // the end of file
-            else if (base == 1) {
+                            else if (base == 1) {
                 if (((file*)sector[openBlock])->getEnd() + offset < 0) {
                     std::cout << "Error: Seek failed. Can't go backward when reach the beginning of the file." << std::endl;
                 }
@@ -427,7 +404,6 @@ namespace fs
         }
     }
 
-// return the block* of name block
     block* disk::findBlock(std::string name)
     {
         std::string original, name1;
@@ -455,7 +431,6 @@ namespace fs
         }
     }
 
-// return the block* of the parent directory
     directory* disk::findParent(directory* super, std::string name)
     {
         if (name.find('/') != name.npos) {
@@ -466,8 +441,7 @@ namespace fs
             directory* sub;
             sub = super->getDirEntry(name1);
 
-            // if directory name exist in parent directory super
-            if(sub != super){
+                        if(sub != super){
                 return findParent(sub, name2);
             }
                 // if directory name NOT in parent directory super
@@ -483,12 +457,10 @@ namespace fs
 
 
 
-            // sub exist as a directory in parent directory super
-            if (sub != super && file == nullptr) {
+                        if (sub != super && file == nullptr) {
                 return super;
             }
-                // file exist as a file in parent directory super
-            else if (sub == super && file != nullptr) {
+                            else if (sub == super && file != nullptr) {
                 return super;
             }
                 // NEITHER sub or file exist in parent directory super
@@ -506,8 +478,7 @@ namespace fs
         block* newblock;
         int sectorNum;
 
-        // initial
-        sectorNum = index();
+                sectorNum = index();
         newblock = nullptr;
 
         if (index() != -1) {
@@ -536,8 +507,7 @@ namespace fs
             directory* sub;
             sub = super->getDirEntry(name1);
 
-            // if directory name exist in parent directory super
-            if(sub != super){
+                        if(sub != super){
                 return helpFind(sub, name2);
             }
 
@@ -563,13 +533,11 @@ namespace fs
             if (sub == super && file == nullptr) {
                 return super;
             }
-                // sub exist as a directory in parent directory super
-            else if (sub != super) {
+                            else if (sub != super) {
                 deleteBlock(super, sub);
                 return super;
             }
-                // file exist as a file in parent directory super
-            else {
+                            else {
                 deleteBlock(super, file);
                 return super;
             }
@@ -578,13 +546,11 @@ namespace fs
             return nullptr;
     }
 
-// delete a allocated dir block dir from directory super
     void disk::deleteBlock(directory* super, directory* dir)
     {
         int deleteNum;
 
-        // empty directory
-        if (dir->isEmpty() == true) {
+                if (dir->isEmpty() == true) {
             deleteNum = super->deleteNumber(dir);
 
             if (deleteNum == -1) {
@@ -596,10 +562,8 @@ namespace fs
                 freeSpaceList[deleteNum] = true;
             }
         }
-            // directory not empty
-        else {
-            // empty dir
-            block** entry;
+                    else {
+                        block** entry;
             entry = dir->getEntryHead();
 
             for (int i = 0; i < DIR_SIZE; i++) {
@@ -613,8 +577,7 @@ namespace fs
                 }
             }
 
-            // delete the empty dir from super
-            deleteNum = super->deleteNumber(dir);
+                        deleteNum = super->deleteNumber(dir);
 
             if (deleteNum == -1) {
                 std::cout << "Error: " << dir->getName() << " delete failed because it is not located in directory " << super->getName() << std::endl;
@@ -627,13 +590,11 @@ namespace fs
         }
     }
 
-// delete a allocated block file from directory super
     void disk::deleteBlock(directory* super, block* file)
     {
         int deleteNum;
 
-        // no linker
-        if (file->getBack() == nullptr && file->getFrwd() == nullptr) {
+                if (file->getBack() == nullptr && file->getFrwd() == nullptr) {
             deleteNum = super->deleteNumber(file);
 
             if (deleteNum == -1) {
@@ -653,14 +614,12 @@ namespace fs
             front = file;
             back = nullptr;
 
-            // get to the last node
-            while (front->getFrwd() != nullptr) {
+                        while (front->getFrwd() != nullptr) {
                 front = front->getFrwd();
                 back = front->getBack();
             }
 
-            // delete the last node and traverse back
-            while (back != nullptr) {
+                        while (back != nullptr) {
                 deleteNum = front->getNumber();
                 front->setBack((block*)nullptr);
                 back->setFrwd((block*)nullptr);
@@ -673,8 +632,7 @@ namespace fs
                 back = front->getBack();
             }
 
-            // delete the first node
-            deleteNum = super->deleteNumber(file);
+                        deleteNum = super->deleteNumber(file);
             delete sector[deleteNum];
             sector[deleteNum]=nullptr;
             freeSpaceList[deleteNum] = true;

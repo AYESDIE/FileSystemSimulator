@@ -6,8 +6,7 @@
 
 namespace fs
 {
-    // constructor for directory block
-    directory::directory(int number, std::string name): block(number, true, name)
+        directory::directory(int number, std::string name): block(number, true, name)
     {
         free = -1;
         for (int i = 0; i < DIR_SIZE; i++) {
@@ -15,11 +14,9 @@ namespace fs
         }
     }
 
-// destructor of directory
     directory::~directory()
     {   std::cout << "directory " << this->getName() << " is deleted."<< std::endl;   }
 
-// get the entry block* of name
     directory* directory::getDirEntry(std::string name)
     {
         directory* temp;
@@ -34,7 +31,6 @@ namespace fs
         return temp;
     }
 
-// get the file block* of name
     block* directory::getFileEntry(std::string name)
     {
         block* temp;
@@ -49,18 +45,15 @@ namespace fs
         return temp;
     }
 
-// return the block* of entry;
     block** directory::getEntryHead()
     {   return entry;   }
 
-// return the block number of the to be deleted block*
     int directory::deleteNumber(block* toDelete)
     {
         int temp;
         temp = -1;
 
-        // set entry[i] == file to nullptr
-        for (int i = 0; i < DIR_SIZE; i++) {
+                for (int i = 0; i < DIR_SIZE; i++) {
             if (entry[i]->getNumber() == toDelete->getNumber()) {
                 temp = entry[i]->getNumber();
                 entry[i] = nullptr;
@@ -70,7 +63,6 @@ namespace fs
         return temp;
     }
 
-// return the size of the directory block
     int directory::getSize()
     {
         int size;
@@ -84,7 +76,6 @@ namespace fs
         return size;
     }
 
-// add an newly allocated entry
     void directory::addEntry(block* newEntry)
     {
         for (int i = 0; i < DIR_SIZE; i++) {
@@ -95,7 +86,6 @@ namespace fs
         }
     }
 
-// set free for root block
     void directory::setFree(int index)
     {
         if (this->getNumber() == 0) {
@@ -105,7 +95,6 @@ namespace fs
             free = -1;
     }
 
-// display directory content
     void directory::display(std::string indent)
     {
         // display name, type, block number, and size
@@ -127,8 +116,7 @@ namespace fs
         if (this->getNumber() == 0)
         {   std::cout << indent << "-FREE: " << free << std::endl; }
 
-        // display unused filler
-        std::cout << indent << "-FILLER: UNUSED" << std::endl;
+                std::cout << indent << "-FILLER: UNUSED" << std::endl;
 
         if (isEmpty() == false) {
             indent += "\t";
@@ -145,7 +133,6 @@ namespace fs
         }
     }
 
-// check whether the directory is empty
     bool directory::isEmpty()
     {
         bool flag;
