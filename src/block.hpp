@@ -3,29 +3,91 @@
 
 #include "core.hpp"
 
-namespace fs {
-class block {
- private:
-  int number;
-  block *frwd;
-  block *back;
-  std::string name;
-  bool dir;
+namespace fs
+{
+/**
+ * A class representation of a block.
+ */
+class block
+{
+  public:
+    /**
+     * Default constructor for a block.
+     */
+    block();
 
- public:
-  block();  // default constructor for block
-  block(int number, bool isDir,
-        std::string name);    // constructor for directory or file block
-  virtual ~block();           // virtual destructor
-  int getNumber();            // return block number
-  bool isDir();               // return the type of block
-  void setFrwd(block *frwd);  // set frwd block pointer
-  void setBack(block *back);  // set back block pointer
-  void reset();               // reset a block* to nullptr
-  block *getFrwd();           // return frwd block pointer
-  block *getBack();           // return back block pointer
-  std::string getName();      // return block name
+    /**
+     * Parameterized constructor for a file or directory block.
+     * @param blockNumber - Number of the block.
+     * @param isDir - Flag: True: The block is a directory.
+     * @param blockName - name of the block.
+     */
+    block(int blockNumber, bool isDir, const std::string &blockName);
+
+    /**
+     * Virtual destructor for block.
+     */
+    virtual ~block();
+
+    /**
+     * @return - block number
+     */
+    int getBlockNumber();
+
+    /**
+     * @return - frwd block pointer.
+     */
+    block *getFrwd();
+
+    /**
+     * @return - back block pointer.
+     */
+    block *getBack();
+
+    /**
+     * @return - name of the block.
+     */
+    std::string getName();
+
+    /**
+     * Return the type of block.
+     * @return - True: Block is directory; else false.
+     */
+    bool isDir();
+
+    /**
+     * Set the frwd block pointer.
+     * @param frwd - frwd block pointer.
+     */
+    void setFrwd(block *frwd);
+
+    /**
+     * Set the back block pointer.
+     * @param back - back block pointer.
+     */
+    void setBack(block *back);
+
+    /**
+     * Resets the block pointer to null pointer.
+     */
+    void reset();
+
+  private:
+    // Block Number
+    int number;
+
+    // frwd Block Pointer
+    block *frwd;
+
+    // back Block Pointer
+    block *back;
+
+    // Block Name
+    std::string name;
+
+    // Block Type
+    bool dir;
 };
-}  // namespace fs
+} // namespace fs
 
-#endif  // FILESYSTEMSIMULATOR_BLOCK_HPP
+#endif // FILESYSTEMSIMULATOR_BLOCK_HPP

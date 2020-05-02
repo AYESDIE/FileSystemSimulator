@@ -5,26 +5,86 @@
 #include "core.hpp"
 #include "file.hpp"
 
-namespace fs {
-class directory : public block {
- private:
-  block *entry[DIR_SIZE];
-  int free;  // ROOT: block number of first unused block
- public:
-  directory(int number, std::string name);  // constructor for directory block
-  ~directory();                             // destructor
-  directory *getDirEntry(
-      std::string name);                  // get the directory block* for name
-  block *getFileEntry(std::string name);  // get the file block* for name
-  block **getEntryHead();                 // return the block* of entry;
-  int deleteNumber(
-      block *file);  // return the block number of the to be deleted block*
-  int getSize();     // return the size of the directory block
-  void addEntry(block *newEntry);    // add an newly allocated entry
-  void setFree(int index);           // set free for root block
-  void display(std::string indent);  // display directory content
-  bool isEmpty();
-};
-}  // namespace fs
+namespace fs
+{
+/**
+ * Class representation for a directory.
+ */
+class directory : public block
+{
+  public:
+    /**
+     * Constructor for a directory block.
+     *
+     * @param number - Block Number
+     * @param name - Block Name
+     */
+    directory(int number, std::string name);
 
-#endif  // FILESYSTEMSIMULATOR_DIRECTORY_HPP
+    /**
+     * Destructor for directory block.
+     */
+    ~directory();
+
+    /**
+     * Get the block pointer for the given directory name
+     * @param name - name of the directory
+     * @return - block pointer for the directory.
+     */
+    directory *getDirEntry(std::string name);
+
+    /**
+     * Get the block pointer for the given file name.
+     * @param name - name of the file
+     * @return - black pointer for the file.
+     */
+    block *getFileEntry(std::string name);
+
+    /**
+     * Get the block pointer of entry.
+     * @return - block pointer of entry.
+     */
+    block **getEntryHead();
+
+    /**
+     * Delete block pointer, returns block number associated to it.
+     * @param file - filer block pointer to be deleted.
+     * @return - block number associated to the file
+     */
+    int deleteNumber(block *file);
+
+    /**
+     * @return - size of the directory block.
+     */
+    int getSize();
+
+    /**
+     * Add a newly allocated entry.
+     * @param newEntry - new allocated entry.
+     */
+    void addEntry(block *newEntry);
+
+    /**
+     * Set free for root.
+     * @param index - index
+     */
+    void setFree(int index);
+
+    /**
+     * Displayes the content of the directory.
+     */
+    void display(std::string indent);
+
+    /**
+     * @return - True if the directory is empty.
+     */
+    bool isEmpty();
+
+  private:
+    block *entry[DIR_SIZE];
+
+    int free;
+};
+} // namespace fs
+
+#endif // FILESYSTEMSIMULATOR_DIRECTORY_HPP

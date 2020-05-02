@@ -6,4 +6,4 @@
 #include "disk.hpp"
 #include "file.hpp"
 
-#endif  // FILESYSTEMSIMULATOR_FSS_HPP
+#endif // FILESYSTEMSIMULATOR_FSS_HPP
