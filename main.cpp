@@ -19,9 +19,9 @@ int main() {
 
     char arg [ARGLEN];
     char* arglist[MAXARGS];
-    disk* Disk1;
+    fs::disk* Disk1;
 
-    Disk1 = new disk();
+    Disk1 = new fs::disk();
 
     while (strcmp(arg, "exit\n") != 0) {
         printf(" > ");
