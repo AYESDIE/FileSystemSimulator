@@ -1,6 +1,3 @@
-//
-// Created by ayesdie on 01/05/20.
-//
 
 #include "directory.hpp"
 

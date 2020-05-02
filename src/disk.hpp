@@ -1,6 +1,3 @@
-//
-// Created by ayesdie on 01/05/20.
-//
 
 #ifndef FILESYSTEMSIMULATOR_DISK_HPP
 #define FILESYSTEMSIMULATOR_DISK_HPP

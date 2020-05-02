@@ -1,7 +1,3 @@
-//
-// Created by ayesdie on 01/05/20.
-//
-
 #ifndef FILESYSTEMSIMULATOR_FILE_HPP
 #define FILESYSTEMSIMULATOR_FILE_HPP
 

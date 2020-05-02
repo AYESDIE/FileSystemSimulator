@@ -1,7 +1,3 @@
-//
-// Created by ayesdie on 01/05/20.
-//
-
 #include "file.hpp"
 
 namespace fs {
