@@ -1,4 +1,3 @@
-
 #include "directory.hpp"
 
 namespace fs {
