@@ -136,7 +136,7 @@ void directory::display(std::string indent)
                     ((directory*)entry[i])->display(indent);
                 }
                 else {
-                    ((File*)entry[i])->display(indent);
+                    ((file*)entry[i])->display(indent);
                 }
             }
         }

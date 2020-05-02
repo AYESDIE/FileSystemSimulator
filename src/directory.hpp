@@ -5,9 +5,9 @@
 #ifndef FILESYSTEMSIMULATOR_DIRECTORY_HPP
 #define FILESYSTEMSIMULATOR_DIRECTORY_HPP
 
-#include "fss.hpp"
-#include <string>
-#include <iostream>
+#include "core.hpp"
+#include "block.hpp"
+#include "file.hpp"
 
 class directory : public block
 {

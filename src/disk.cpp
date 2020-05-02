@@ -166,14 +166,14 @@ void disk::open(char mode, std::string name)
         std::cout << "Error: Open " << name << " failed. Please enter the correct open mode. (eg: I or U or O)." << std::endl;
     }
     else {
-        block* file;
-        file = findBlock(name);
+        block* b1;
+        b1 = findBlock(name);
 
-        if (file == nullptr) {
+        if (b1 == nullptr) {
             std::cout << "Error: Open " << name << " failed because file name is not valid. Please try again." << std::endl;
         }
         else {
-            openBlock = file->getNumber();
+            openBlock = b1->getNumber();
             cursor = 0;
             if (mode == 'I') {
                 openMode = 0;
@@ -181,7 +181,7 @@ void disk::open(char mode, std::string name)
             }
             else if (mode == 'O') {
                 openMode = 1;
-                cursor = ((File*)sector[openBlock])->getEnd();
+                cursor = ((file*)sector[openBlock])->getEnd();
             }
             else {
                 openMode = 2;
@@ -214,12 +214,12 @@ void disk::deleteNew(std::string name)
     // delete a file block
     if (toBeDelete != nullptr && parent != nullptr && toBeDelete->isDir() == false) {
         blockNum = toBeDelete->getNumber();
-        deleteblock(parent, toBeDelete);
+        deleteBlock(parent, toBeDelete);
     }
         // delete a directory block
     else if (toBeDelete!= nullptr && parent != nullptr && toBeDelete->isDir() == true) {
         blockNum = toBeDelete->getNumber();
-        deleteblock(parent, (directory*)toBeDelete);
+        deleteBlock(parent, (directory*)toBeDelete);
     }
     else {
         std::cout << "Error: Delete " << name << " failed. Please enter a valid file name." << std::endl;
@@ -241,17 +241,17 @@ void disk::write(int count, std::string input)
     }
     else {
         int current, blockNum;
-        File* next;
+        file* next;
 
         current = cursor;
         blockNum = openBlock;
-        next = (File*)(sector[openBlock]->getFrwd());
+        next = (file*)(sector[openBlock]->getFrwd());
 
         // get to the end of the link list and reach the last file block
         while (current >= FILE_SIZE && next != nullptr) {
             openBlock = next->getNumber();
             current -= FILE_SIZE;
-            next = (File*)(sector[openBlock]->getFrwd());
+            next = (file*)(sector[openBlock]->getFrwd());
         }
 
         if (current >= FILE_SIZE) {
@@ -285,7 +285,7 @@ void disk::helpWrite(int& count, std::string& input, int& current)
             wrote = FILE_SIZE - current;
         }
 
-        ((File*)sector[openBlock])->writeFile(count, input, current);
+        ((file*)sector[openBlock])->writeFile(count, input, current);
         totalToWrite -= wrote;
 
         // allocate new block
@@ -303,7 +303,7 @@ void disk::helpWrite(int& count, std::string& input, int& current)
 
     if (totalToWrite < FILE_SIZE && newFile != nullptr) {
         current = current % FILE_SIZE;
-        ((File*)sector[openBlock])->writeFile(count, input, current);
+        ((file*)sector[openBlock])->writeFile(count, input, current);
         if (count > 0) {
             std::cout << "Error: Write is unfinished because ALL the sectors are used and the disk can't allocate more." << std::endl;
         }
@@ -357,7 +357,7 @@ void disk::read(int count)
                     readed = FILE_SIZE - current;
                 }
 
-                ((File*)sector[openBlock])->readFile(count, current);
+                ((file*)sector[openBlock])->readFile(count, current);
                 totalRead -= readed;
 
                 next = sector[openBlock]->getFrwd();
@@ -371,7 +371,7 @@ void disk::read(int count)
 
             if (totalRead < FILE_SIZE && next != nullptr) {
                 current = current % FILE_SIZE;
-                ((File*)sector[openBlock])->readFile(count, current);
+                ((file*)sector[openBlock])->readFile(count, current);
                 std::cout << "(EOF)" << std::endl;
                 if (count > 0) {
                     std::cout << "\nEnd of file is reached." << std::endl;
@@ -415,11 +415,11 @@ void disk::seek(int base, int offset)
         }
             // the end of file
         else if (base == 1) {
-            if (((File*)sector[openBlock])->getEnd() + offset < 0) {
+            if (((file*)sector[openBlock])->getEnd() + offset < 0) {
                 std::cout << "Error: Seek failed. Can't go backward when reach the beginning of the file." << std::endl;
             }
             else {
-                cursor = ((File*)sector[openBlock])->getEnd() + offset;
+                cursor = ((file*)sector[openBlock])->getEnd() + offset;
             }
         }
     }
@@ -510,7 +510,7 @@ block* disk::helpCreate(char type, std::string name)
 
     if (index() != -1) {
         if (type == 'U') {
-            sector[sectorNum] =  new File (sectorNum, name);
+            sector[sectorNum] =  new file (sectorNum, name);
         }
         else {
             sector[sectorNum] = new directory (sectorNum, name);
@@ -563,12 +563,12 @@ directory* disk::helpFind(directory* super, std::string name)
         }
             // sub exist as a directory in parent directory super
         else if (sub != super) {
-            deleteblock(super, sub);
+            deleteBlock(super, sub);
             return super;
         }
             // file exist as a file in parent directory super
         else {
-            deleteblock(super, file);
+            deleteBlock(super, file);
             return super;
         }
     }
@@ -577,7 +577,7 @@ directory* disk::helpFind(directory* super, std::string name)
 }
 
 // delete a allocated dir block dir from directory super
-void disk::deleteblock(directory* super, directory* dir)
+void disk::deleteBlock(directory* super, directory* dir)
 {
     int deleteNum;
 
@@ -603,10 +603,10 @@ void disk::deleteblock(directory* super, directory* dir)
         for (int i = 0; i < DIR_SIZE; i++) {
             if (entry[i] != nullptr) {
                 if (entry[i]->isDir() == true) {
-                    deleteblock(dir, (directory*)entry[i]);
+                    deleteBlock(dir, (directory*)entry[i]);
                 }
                 else {
-                    deleteblock(dir, entry[i]);
+                    deleteBlock(dir, entry[i]);
                 }
             }
         }
@@ -626,7 +626,7 @@ void disk::deleteblock(directory* super, directory* dir)
 }
 
 // delete a allocated block file from directory super
-void disk::deleteblock(directory* super, block* file)
+void disk::deleteBlock(directory* super, block* file)
 {
     int deleteNum;
 

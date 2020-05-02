@@ -5,10 +5,9 @@
 #ifndef FILESYSTEMSIMULATOR_FILE_HPP
 #define FILESYSTEMSIMULATOR_FILE_HPP
 
+#include "core.hpp"
 #include "block.hpp"
-#include "fss.hpp"
-#include <string>
-#include <iostream>
+
 
 class file: public block
 {

@@ -1,8 +1,7 @@
 #ifndef FILESYSTEMSIMULATOR_BLOCK_HPP
 #define FILESYSTEMSIMULATOR_BLOCK_HPP
 
-#include <string>
-#include "fss.hpp"
+#include "core.hpp"
 
 class block {
 private:
