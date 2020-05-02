@@ -2,20 +2,19 @@
 #include <fss.hpp>
 #include <iostream>
 
-#define ARGLEN 50500 // token length
-#define MAXARGS 3    // cmdline args
+#define ARGLEN 50500  // token length
+#define MAXARGS 3     // cmdline args
 using namespace std;
 
 // split a string into tokens
 void parse(char *input, char *args[]) {
-  input[std::strlen(input) - 1] = '\0'; // fgets reads the \n, so overwrite it
+  input[std::strlen(input) - 1] = '\0';  // fgets reads the \n, so overwrite it
   args[0] = std::strtok(input, " ");
   args[1] = std::strtok(NULL, " ");
-  args[2] = std::strtok(NULL, "\0"); // for writing long string
+  args[2] = std::strtok(NULL, "\0");  // for writing long string
 }
 
 int main() {
-
   char arg[ARGLEN];
   char *arglist[MAXARGS];
   fs::disk *Disk1;
@@ -28,7 +27,7 @@ int main() {
       perror("read input failed");
       exit(1);
     } else {
-      if (strcmp(arg, "exit\n") == 0) // exit command to finish
+      if (strcmp(arg, "exit\n") == 0)  // exit command to finish
         exit(0);
 
       parse(arg, arglist);

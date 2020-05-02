@@ -91,4 +91,4 @@ int file::getSize() {
   }
   return size;
 }
-} // namespace fs
+}  // namespace fs

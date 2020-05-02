@@ -245,7 +245,6 @@ void disk::helpWrite(int &count, std::string &input, int &current) {
   wrote = 0;
 
   while (totalToWrite >= FILE_SIZE) {
-
     current = current % FILE_SIZE;
     if (FILE_SIZE > count) {
       wrote = count - current;
@@ -592,4 +591,4 @@ void disk::deleteBlock(directory *super, block *file) {
     freeSpaceList[deleteNum] = true;
   }
 }
-} // namespace fs
+}  // namespace fs

@@ -49,4 +49,4 @@ block *block::getFrwd() { return frwd; }
 block *block::getBack() { return back; }
 
 std::string block::getName() { return name; }
-} // namespace fs
+}  // namespace fs

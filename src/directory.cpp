@@ -139,4 +139,4 @@ bool directory::isEmpty() {
   }
   return flag;
 }
-} // namespace fs
+}  // namespace fs
